@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="auneor_conseil_link_tracker_partner_view_tree">
+            <field name="name">auneor.conseil.link.tracker.partner.view.tree</field>
+            <field name="model">link.tracker</field>
+            <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_links_tree"/>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <field name="title" position="after">
+                    <button name="contacts_list_view" type="object" string="View who clicked"
+                    attrs="{'invisible':[('count','=',0)]}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
