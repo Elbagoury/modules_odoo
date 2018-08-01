@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="test_last_price_invoice_" model="ir.ui.view">
+            <field name="name">test_last-price</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <field name="list_price" position="after">
+                    <field name="last_invoice_price"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

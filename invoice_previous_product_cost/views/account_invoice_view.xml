@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="last_invoice_product_invoice_prices_view" model="ir.ui.view">
+            <field name="name">last.product.invoice.view</field>
+            <field name="model">account.invoice.line</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <tree string="Last Product Prices">
+                    <field name="invoice_id"/>
+                    <field name="partner_id"/>
+                    <field name="invoice_data"/>
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="price_unit"/>
+                    <field name="price_subtotal"/>
+                    <field name="invoice_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_invoice_ext_form_view">
+            <field name="name">product_extended.product.form.view</field>
+            <field name="model">product.product</field>
+            <field name="priority">3</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook//page[2]" position="after">
+                    <page string="Previous Price History" name="previous_sale_history">
+                        <group>
+                            <group>
+                                <field name="invoice_partner_id"/>
+                            </group>
+                        </group>
+                        <gruop>
+                            <group>
+                                <button name="action_invoice_product_prices" string="Previous Sale Rates"
+                                        help="Last Prices" type="object"/>
+                            </group>
+                        </gruop>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_template_invoice_ext_form_view">
+            <field name="name">product_extended.product.template.form.view</field>
+            <field name="model">product.template</field>
+            <field name="priority">3</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook//page[2]" position="after">
+                    <page string="Previous Price History" name="previous_sale_history">
+                        <gruop>
+                            <group>
+                                <button name="action_invoice_product_prices" string="Previous Invoice Rates"
+                                        help="Last Prices" type="object"/>
+                            </group>
+                        </gruop>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

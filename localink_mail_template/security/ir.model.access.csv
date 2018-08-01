@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_localink_mail_template_localink_mail_template,localink_mail_template.localink_mail_template,model_localink_mail_template_localink_mail_template,,1,0,0,0

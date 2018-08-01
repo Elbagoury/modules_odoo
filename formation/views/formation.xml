@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="formation_urb_list_action">
+            <field name="name">Formation</field>
+            <field name="res_model">formation.formation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first Template model
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="formation_urb_form_view">
+            <field name="name">formation.urb.form.view</field>
+            <field name="model">formation.formation</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <separator string="Templates Contrat / Convention"/>
+                        <group>
+                            <group>
+                                <field name="name" string="Nom du template"/>
+                                <field name="type_formation" widget="radio"/>
+                                <field name="cotractant"/>
+                            </group>
+                            <group>
+                                <field name="date_debut"/>
+                                <field name="date_fin"/>
+                                <field name="lieu"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="objet_formation"/>
+                            <field name="organisation"/>
+                            <field name="date_contrat"/>
+                        </group>
+                        <notebook>
+                            <page string="Texts">
+                                <group>
+                                    <field name="objectifs_pedagogiques"/>
+                                    <field name="contenu"/>
+                                    <field name="methodes_moyens_pedagogique"/>
+                                    <field name="modalite_validation"/>
+                                    <field name="date_et_duree"/>
+                                    <field name="niveau_connaissances"/>
+                                    <field name="modalites_reglement"/>
+                                </group>
+                            </page>
+                            <page string="Formateur(s)">
+                                <field name="formateurs" widget="many2many_tags"/>
+                            </page>
+                            <page string="Effectif formé" attrs="{'invisible':[('type_formation', '=', 'contract')]}">
+                                <field name="effectifs"/>
+                            </page>
+                            <page string="Logo">
+                                <field name="urb_logo" widget="image"/>
+                            </page>
+                            <page string="Tampon">
+                                <field name="urb_tampon" widget="image"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="formation_urb_tree_view">
+            <field name="name">formation.urb.tree.view</field>
+            <field name="model">formation.formation</field>
+            <field name="arch" type="xml">
+                <tree string="Idea list">
+                    <field name="name"/>
+                    <field name="type_formation"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem name="Formation" id="menu_crm_formation" parent="base.menu_sales"
+            action="formation_urb_list_action"/>
+    </data>
+</openerp>

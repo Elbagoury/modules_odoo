@@ -1,0 +1,62 @@
+<odoo>
+    <data>
+
+        <!--<record model="ir.actions.act_window" id="payment_method_list_all_action">-->
+            <!--<field name="name">Payment Method</field>-->
+            <!--<field name="res_model">account.journal</field>-->
+            <!--<field name="view_type">form</field>-->
+            <!--<field name="view_mode">tree</field>-->
+            <!--<field name="help" type="html">-->
+                <!--<p class="oe_view_nocontent_create">-->
+                    <!--Create the first payment method.-->
+                <!--</p>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <!--<menuitem id="menu_all_payment_methods" name="Payment methods" parent="account.account_management_menu"-->
+                  <!--action="payment_method_list_all_action" sequence="4"/>-->
+
+
+        <record model="ir.ui.view" id="partner_form_view_payment_method">
+            <field name="name">partner_form_view_payment_method</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_payment_term_id']" position="after">
+                    <field name="payment_method_id"
+                           attrs="{'invisible': [('is_company','=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_payment_method" model="ir.ui.view">
+            <field name="name">view_order_form_payment_method</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="payment_method_id"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="invoice_form_payment_method" model="ir.ui.view">
+            <field name="name">invoice_form_payment_method</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="payment_method_id"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

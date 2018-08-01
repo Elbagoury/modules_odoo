@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="paperformat_formation" model="report.paperformat">
+            <field name="name">Formation report A4</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">30</field>
+            <field name="margin_bottom">40</field>
+            <field name="margin_left">20</field>
+            <field name="margin_right">20</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">25</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+            id="report_formation"
+            model="crm.lead"
+            string="Rapport Formation"
+            name="formation.report_formation_view"
+            file="formation.report_formation"
+            report_type="qweb-pdf"/>
+
+        <record id="report_formation" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="formation.paperformat_formation"/>
+        </record>
+
+        <template id="report_formation_view">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="header">
+                        <img t-if="doc.formation_reports.urb_logo"
+                                  t-att-src="'data:image/png;base64,%s' % doc.formation_reports.urb_logo"
+                                  style="display: block;
+                                        margin-left: auto;
+                                        margin-right: auto;
+                                        width: 15%;"/>
+                    </div>
+
+                    <div class="page">
+                        <style>
+                            h1 {text-transform:
+                                uppercase; text-align:center;
+                                font-size: 20px;
+                                margin-bottom: 2em;
+                                }
+
+                            h3 {text-transform: uppercase;
+                                font-size: 18px;
+                                font-weight: 500;}
+
+                            h4 {font-size: 17 px;
+                                font-weight: 500;}
+
+                            p {font-size: 15px;}
+                        </style>
+
+                        <!--TITRE COVENTION / CONTRAT-->
+                        <div t-if="doc.formation_reports.type_formation == 'convention'">
+                            <h1>
+                                Convention de formation professionnelle continue
+                            </h1>
+                        </div>
+                        <div t-if="doc.formation_reports.type_formation == 'contract'">
+                            <h1>
+                                Contrat de formation professionnelle
+                            </h1>
+                        </div>
+
+                        <!--INTRODUCTION   -->
+                        <div>
+                            <p>Entre les soussignés :</p>
+                            <p>1. (Organisme de formation)</p>
+                            <p>Groupe URD (« déclaration d’activité enregistrée sous le numéro 82 2  01542 26 auprès du préfet
+                                de région de Rhône-Alpes »)</p>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <p>2. (Raison sociale de l’employeur)</p>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <p>2. (Nom, prénom et adresse du cocontractant ci-après désigné l’apprenant)</p>
+                            </t>
+                            <p><t t-esc="doc.formation_reports.cotractant.name"/>,
+                                <t t-esc="doc.formation_reports.cotractant.street"/>
+                                <t t-esc="doc.formation_reports.cotractant.street2"/>
+                                <t t-esc="doc.formation_reports.cotractant.city"/>
+                                <t t-esc="doc.formation_reports.cotractant.zip"/>
+                                <t t-esc="doc.formation_reports.cotractant.country_id.name"/></p>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <p>est conclue la convention suivante, en application des dispositions du Livre
+                                    IX du Code du travail portant organisation de la formation professionnelle
+                                    continue dans le cadre de l’Éducation permanente.</p>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <p>est conclu un contrat de formation professionnelle en application de l’article
+                                    L. 920-13 du Code du travail.</p>
+                            </t>
+                        </div>
+
+                        <!--ARTICLE 1-->
+                        <div>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <h3>Article 1 : Objet de la convention</h3>
+                                <p>En exécution de la présente convention, l’organisme de formation s’engage à organiser
+                                    l’action de formation intitulée : «<t t-esc="doc.formation_reports.objet_formation"/>»</p>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <h3>Article 1 : Objet du contrat</h3>
+                                <p>En exécution du présent contrat, l’organisme de formation s’engage à organiser
+                                    l’action de formation intitulée : «<t t-esc="doc.formation_reports.objet_formation"/>»</p>
+                            </t>
+                        </div>
+
+                        <!--ARTICLE 2-->
+                        <div>
+                            <h3>Article 2 : Nature et caractéristiques des actions de formation</h3>
+                            <p>L’action de formation entre dans la catégorie des actions de d'acquisition, d'entretien
+                                et de perfectionnement des connaissances prévue par l’article L. 900-2 du Code du
+                                travail.
+                                Elle a pour caractéristiques :</p>
+                        </div>
+                        <div>
+                            <h4>Objectifs pédagogiques</h4>
+                            <p>À l’issu de la formation, les participants sont en mesure de :</p>
+                            <t t-raw="doc.formation_reports.objectifs_pedagogiques"/>
+                            <h4>Contenu :</h4>
+                            <t t-raw="doc.formation_reports.contenu"/>
+                            <h4>Méthodes et moyens pédagogiques :</h4>
+                            <t t-raw="doc.formation_reports.methodes_moyens_pedagogique"/>
+                            <h4>Modalités de suivi et validation des acquis :</h4>
+                            <t t-raw="doc.formation_reports.modalite_validation"/>
+                            <h4>Date et durée :</h4>
+                            <t t-raw="doc.formation_reports.date_et_duree"/>
+                            <h4>Lieu :</h4>
+                            <t t-raw="doc.formation_reports.lieu"/>
+                        </div>
+
+                        <!--ARTICLE 3-->
+                        <div>
+                            <h3>Article 3 : Niveau de connaissances préalables nécessaire</h3>
+                            <p>Afin de suivre au mieux l’action de formation susvisée et obtenir la ou les
+                                qualifications auxquelles elle prépare, l’apprenant est informé qu’il est nécessaire
+                                de posséder, avant l’entrée en formation, le niveau de connaissance(s) suivant :</p>
+                            <t t-raw="doc.formation_reports.niveau_connaissances"/>
+                        </div>
+
+                        <!--ARTICLE 4-->
+                        <div>
+                            <h3>Article 4 : Organisation de l’action de formation</h3>
+                            <p>L’action de formation aura lieu du
+                                <span t-field="doc.formation_reports.date_debut" t-options='{"widget": "date"}'/> au
+                                <span t-field="doc.formation_reports.date_fin" t-options='{"widget": "date"}'/> à
+                                <span t-field="doc.formation_reports.lieu"/>.</p>
+                            <p>Elle est organisée pour un effectif maximum de 20 apprenants.</p>
+                            <p>Les titres, diplômes ou références de(s) personne(s) chargée(s) de la formation sont
+                                indiqués ci-dessous :</p>
+                            <t t-foreach="doc.formation_reports.formateurs" t-as="formateur">
+                                <p><t t-esc="formateur.name"/></p>
+                            </t>
+
+                        </div>
+
+                        <!--ARTICLE 5-->
+                        <div>
+                            <h3>Article 5 : Délai de rétractation</h3>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <p>À compter de la date de signature de la présente convention, l’employeur a un délai de
+                                10 jours francs pour se rétracter. Il en informe l’organisme de formation par lettre
+                                recommandée avec accusé de réception. Dans ce cas, aucune somme ne peut être exigée
+                                de l’employeur.</p>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <p>À compter de la date de signature du présent contrat, l’employeur a un délai de 10
+                                    jours francs pour se rétracter. Il en informe l’organisme de formation par lettre
+                                    recommandée avec accusé de réception. Dans ce cas, aucune somme ne peut être
+                                    exigée de l’apprenant.</p>
+                            </t>
+                        </div>
+
+                        <!--ARTICLE 6-->
+                        <div t-if="doc.formation_reports.type_formation == 'convention'">
+                            <h3>Article 6 : Effectif formé</h3>
+                            <p>L’organisme de formation accueillera les personnes suivantes :</p>
+                            <table class="effectif" style="width:100%">
+                                <style>
+                                    .effectif_th, .effectif_td {
+                                    border: 1px solid black;
+                                    border-collapse: collapse;
+                                    padding:5px;
+                                    }
+                                </style>
+
+                                <tr class="effectif_tr">
+                                    <th class="effectif_th">Prénom / Nom</th>
+                                    <th class="effectif_th">Fonction</th>
+                                </tr>
+                                <t t-foreach="doc.formation_reports.effectifs" t-as="effectif">
+                                    <tr class="effectif_tr">
+                                        <td class="effectif_td"><t t-esc="effectif.name"/></td>
+                                        <td class="effectif_td"><t t-esc="effectif.function"/></td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+
+                        <!--ARTICLE 7 OU 6 POUR LE TEMPLATE DE CONTRAT-->
+                        <div>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <h3>Article 7 : Dispositions financières</h3>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <h3>Article 6 : Dispositions financières</h3>
+                            </t>
+
+                            <div style="padding-left: 25px;">
+                                <ol>
+                                    <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                        <li type="a">L’employeur, en contrepartie des actions de formation réalisées,
+                                        s’engage à verser à l’organisme, une somme correspondant aux coûts suivants :</li>
+                                    </t>
+                                    <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                        <li type="a">L’apprenant, en contrepartie des actions de formation réalisées,
+                                        s’engage à verser à l’organisme, une somme correspondant aux coûts suivants :</li>
+                                    </t>
+
+                                    <li style="padding-left: 15px; counter-increment:none; list-style-type:none;">
+                                        <ul>
+                                            <li>Les frais de formation sont fixés à 450 €.</li>
+                                            <li>Les frais annexes (restauration, hébergement, transport), facultatifs,
+                                                sont à définir selon les modalités de paiement indiquées dans le
+                                                formulaire d’inscription. </li>
+                                        </ul>
+                                    </li>
+                                    <li value="2" type="a">L’organisme de formation, en contrepartie des sommes reçues, s’engage
+                                        à réaliser toutes les actions prévues dans le cadre de la présente convention ainsi
+                                        qu’à fournir tout document et pièce de nature à justifier la réalité et la validité
+                                        des dépenses de formation engagées à ce titre.</li>
+                                    <li type="a">Modalités de règlement</li>
+                                    <t t-raw="doc.formation_reports.modalites_reglement"/>
+                                </ol>
+                            </div>
+                            <p>Notre organisme n’est pas assujetti à la T.V.A.</p>
+                            <p>Les références bancaires du Groupe URD sont:</p>
+                            <p>Établissement bancaire :	Crédit Agricole Sud Rhône Alpes, agence Buis les Baronnies</p>
+
+                            <table style="border-collapse: separate; border-spacing: 60px 0px;}">
+                                <tr>
+                                    <td></td>
+                                    <td>(Tel : 04.75.28.28.00)</td>
+                                </tr>
+                                <tr>
+                                    <td>N° de compte : </td>
+                                    <td>13906 00123 85002515607 20</td>
+                                </tr>
+                                <tr>
+                                    <td>IBAN :</td>
+                                    <td>FR76 1390 6001 2385 0025 1560 720</td>
+                                </tr>
+                                <tr>
+                                    <td>SWIFT/ BIC : </td>
+                                    <td>AGRIFRPP839</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!--ARTICLE 8 OU 7 POUR LE TEMPLATE DE CONTRAT-->
+                        <div>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <h3>Article 8 : Dédit ou abandon</h3>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <h3>Article 7 : Dédit ou abandon</h3>
+                            </t>
+
+                            <p>En cas de cessation anticipée de la formation du fait de l’organisme de formation ou
+                                l’abandon du stage par l’apprenant pour un autre motif que la force majeure dûment
+                                reconnue, la présente convention est résiliée selon les modalités financières
+                                suivantes :</p>
+                            <p>Dans le cas de force majeure dûment reconnue ou de la cessation anticipée du fait du
+                                Groupe URD, de nouvelles dates seront convenues.</p>
+                            <p>Si l’apprenant est empêché de suivre la formation par suite de force majeure dûment
+                                reconnue, la convention de formation professionnelle est résiliée. Dans ce cas, seules
+                                les prestations effectivement dispensées sont dues au prorata temporis de leur valeur
+                                prévue à la présente convention.</p>
+                            <p>En cas de refus de visa avéré (notification du refus) pour les étrangers, étant donné
+                                qu’il ne s’agit pas d’un événement reconnu de force majeure, les frais de formation
+                                seront remboursés à hauteur de 50 %.</p>
+                            <p>Le nombre d’apprenants minimum est de 8. En cas d’annulation liée à un nombre
+                                insuffisant d’apprenants, le Groupe URD s’engage à avertir l’employeur et l’apprenant
+                                au plus tard 10 jours francs avant le début de la formation et s’engage à rembourser
+                                les sommes perçues au moment de l’inscription. </p>
+                            <p>En aucun cas, le Groupe URD ne peut être redevable des frais annexes déjà engagés par
+                                l’employeur et l’apprenant (restauration, hébergement, transport). </p>
+                        </div>
+
+                        <!--ARTICLE 9 OU 8 POUR LE TEMPLATE DE CONTRAT-->
+                        <div>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <h3>Article 9 : Règlement intérieur</h3>
+                                <p>Par la présente signature, l’employeur et l’apprenant certifient avoir pris
+                                    connaissance et accepté les termes du règlement intérieur de l’organisme de formation.</p>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <h3>Article 8 : Règlement intérieur</h3>
+                                <p>Par la présente signature, l’apprenant certifie avoir pris connaissance et accepté
+                                    les termes du règlement intérieur de l’organisme de formation. </p>
+                            </t>
+                        </div>
+
+                        <!--ARTICLE 10 OU 9 POUR LE TEMPLATE DE CONTRAT-->
+                        <div>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <h3>Article 10 : Cas de différend</h3>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <h3>Article 9 : Cas de différend</h3>
+                            </t>
+
+                            <p>Si une contestation et/ou un différend ne peuvent être réglés à l’amiable, le Tribunal
+                                d’instance de Nyons sera seul compétent pour se prononcer sur le litige.</p>
+                        </div>
+
+                        <!--PAGE BREAK-->
+                        <p style="page-break-after:always;"></p>
+
+                        <!--ARTICLE 11 OU 10 POUR LE TEMPLATE DE CONTRAT-->
+                        <div>
+                            <t t-if="doc.formation_reports.type_formation == 'convention'">
+                                <h3>Article 11 : Date d’effet et durée de la convention</h3>
+                                <p>La présente convention prend effet à compter de sa date de signature par l’employeur
+                                pour s’achever au
+                                <span t-field="doc.formation_reports.date_fin" t-options='{"widget": "date"}'/> </p>
+                            </t>
+                            <t t-if="doc.formation_reports.type_formation == 'contract'">
+                                <h3>Article 10 : Date d’effet et durée de la convention</h3>
+                                <p>Le présent contrat prend effet à compter de sa date de signature par l’apprenant pour
+                                    s’achever au
+                                <span t-field="doc.formation_reports.date_fin" t-options='{"widget": "date"}'/> </p>
+                            </t>
+                            <p>Fait, en double exemplaire, à Plaisians, le
+                                <span t-field="doc.formation_reports.date_contrat" t-options='{"widget": "date"}'/>.</p>
+                            <table class="signatures">
+                                <style>
+                                    .nd_td {
+                                    padding-left: 15em;
+                                    }
+                                </style>
+                                <tr>
+                                    <td>Pour l’apprenant</td>
+                                    <td class="nd_td">Pour l’organisme de formation</td>
+                                </tr>
+                                <tr>
+                                    <td>(nom et prénom du signataire)</td>
+                                    <td class="nd_td">(nom et qualité du signataire)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="nd_td">Juliette HAIM</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="nd_td">Responsable Administratif et Financier</td>
+                                </tr>
+                                <tr>
+                                    <td>Signature et cachet</td>
+                                    <td class="nd_td"></td>
+                                </tr>
+                            </table>
+
+                             <img t-if="doc.formation_reports.urb_tampon"
+                                  t-att-src="'data:image/png;base64,%s' % doc.formation_reports.urb_tampon"
+                                  style="float: right; width: 35%;"/>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <style>
+                            .footer {padding-top: 45px;}
+
+                            .div-footer {text-align: center;
+                                    border-top: 3px solid #EC6332;
+                                    padding-top: 15px;}
+                        </style>
+                        <div class="div-footer">
+                            <span>Groupe URD - La Fontaine des Marins - 26170 Plaisians - France</span>
+                            <p>Tel : + 33 (0)4 75 28 29 35 - urd@urd.org - www.urd.org</p>
+                            <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>
